@@ -80,9 +80,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    void algo(){
-
-
-    }
-
 }
