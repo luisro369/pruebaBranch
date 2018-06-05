@@ -1,4 +1,4 @@
-package com.luisro00005513.pruebaretrofit;
+package com.luisro00005513.pruebaretrofit.network;
 
 
 
@@ -37,7 +37,8 @@ public class News {
      * No args constructor for use in serialization
      *
      */
-    public News() {
+    public News(String title) {
+        this.title = title;
     }
 
     /**

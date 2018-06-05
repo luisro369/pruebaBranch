@@ -7,12 +7,12 @@
     tools:context="com.luisro00005513.pruebaretrofit.MainActivity">
 
     <TextView
-        android:id="@+id/Texto_news"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/texto_news"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="hola"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
+        />
 
 </android.support.constraint.ConstraintLayout>
