@@ -2,8 +2,11 @@ package com.luisro00005513.pruebaretrofit;
 
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Path;
 
 
 /**
@@ -14,7 +17,9 @@ import retrofit2.http.GET;
 
 public interface NewsService {
 
-    @GET("/news/?access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjBmNDE1NjdkMjZmZDAwMjBmNjMyN2IiLCJpYXQiOjE1MjgwNzIwNDgsImV4cCI6MTUyOTI4MTY0OH0.VhOgctxjzPezCoX-53yN_tilCUwiNSUvpnsdm2ICMvw")
+    @GET("News/{title}")
+    Call<News> getTitle(@Path("title") String title);
+    //Call<News> getTitle(@Header("Authorization") String credentials);
     void getNew(Callback<List<News>> callback);
 
 }
