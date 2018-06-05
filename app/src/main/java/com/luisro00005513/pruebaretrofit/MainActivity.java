@@ -41,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        titulo = (TextView)findViewById(R.id.texto_news);
         getToken();
-        //sleep(2000);
-        getListaNoticias(token);
+        titulo = (TextView)findViewById(R.id.texto_news);
 
     }//on create
 
@@ -59,8 +57,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Login> call, Response<Login> response) {
                 if(response.isSuccessful()){
-                    Toast.makeText(MainActivity.this,response.body().getToken(),Toast.LENGTH_SHORT).show();
                     token = response.body().getToken();
+                    Toast.makeText(MainActivity.this,response.body().getToken(),Toast.LENGTH_SHORT).show();
+                    //=====si tuvimos exito y generamos un token manda a llama lo demas========
+                    getListaNoticias(token);
                 }
                 else{
                     Toast.makeText(MainActivity.this,"Fail :(",Toast.LENGTH_SHORT).show();
