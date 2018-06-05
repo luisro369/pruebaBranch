@@ -24,7 +24,10 @@ import static android.os.SystemClock.sleep;
 public class MainActivity extends AppCompatActivity {
 
     TextView titulo;
-    public static final String BASE_URL = "https://gamenewsuca.herokuapp.com/";
+    //en esta varibale pongo la base de la url, en la interfaz NewsService pongo el resto "/news" por ejemplo
+    public static final String BASE_URL = "https://gamenewsuca.herokuapp.com";
+    //en esta variable "global" guardo el token que genere getToken()
+    private static String token;
     //====================retrofit===================
     Retrofit.Builder buider = new Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -41,15 +44,14 @@ public class MainActivity extends AppCompatActivity {
         titulo = (TextView)findViewById(R.id.texto_news);
         getToken();
         //sleep(2000);
-        getListaNoticias();
+        getListaNoticias(token);
 
     }//on create
 
     //=============metodos retrofit==================
-    private static String token;
 
 
-    //==============aca creo el metodo que llame en la interfaz para POST========================
+    //==============aca creo el metodo que llame en la interfaz(NewsService) para POST========================
     private void getToken(){
         Login login = new Login("username","password");
         Call<Login> call = newsService.getToken(login);
@@ -67,15 +69,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Fail perro :(",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,"Fail de conexion perro :(",Toast.LENGTH_SHORT).show();
             }
         });
 
     }//getToken
 
 
-    //==============aca creo el metodo que llame en la interfaz para GET========================
-    private void getListaNoticias(){
+    //==============aca creo el metodo que llame en la interfaz(NewsService) para GET========================
+    private void getListaNoticias(String token){
         //le envio el token
         Call<ResponseBody> call = newsService.getListaNoticias("Bearer " + token);
         call.enqueue(new Callback<ResponseBody>() {
@@ -94,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
+                }//if
                 else{
                     Toast.makeText(MainActivity.this,"Fail en getListaNoticias :(",Toast.LENGTH_SHORT).show();
-                }
-            }
+                }//else
+            }//onResponse
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
