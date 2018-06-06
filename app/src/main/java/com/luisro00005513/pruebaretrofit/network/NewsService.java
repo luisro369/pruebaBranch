@@ -7,11 +7,13 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 /**
@@ -26,8 +28,13 @@ public interface NewsService {
     Call<Login> getToken(@Body Login login);
 
 
-    @GET("/news")
-    Call<ResponseBody> getListaNoticias(@Header("Authorization") String token);
+    @GET("/news/{title}")
+    public Call<ResponseBody> getTitles(@Query("title") String title);
+    //public Call<News> getTitles(@Query("title") String title);
+    //Call<ResponseBody> getListaNoticias(@Header("Authorization") String token);
+
+   // @GET("/news")
+    //public Call<News> getTitles(@Path("title") String title);
 
     /*
     @GET("News/{title}")

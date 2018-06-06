@@ -33,25 +33,11 @@ public class News {
     @Expose
     private String description;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
+/*
     public News(String title) {
         this.title = title;
     }
 
-    /**
-     *
-     * @param id
-     * @param v
-     * @param body
-     * @param title
-     * @param description
-     * @param game
-     * @param createdDate
-     * @param coverImage
-     */
     public News(String id, String title, String body, String game, String createdDate, Integer v, String coverImage, String description) {
         super();
         this.id = id;
@@ -63,7 +49,7 @@ public class News {
         this.coverImage = coverImage;
         this.description = description;
     }
-
+*/
     public String getId() {
         return id;
     }

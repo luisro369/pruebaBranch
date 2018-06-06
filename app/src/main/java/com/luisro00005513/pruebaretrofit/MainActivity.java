@@ -12,6 +12,9 @@ import com.luisro00005513.pruebaretrofit.network.NewsService;
 
 import java.io.IOException;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +32,19 @@ public class MainActivity extends AppCompatActivity {
     //en esta variable "global" guardo el token que genere getToken()
     private static String token;
     //====================retrofit===================
+    OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
+            Request newRequest = chain.request().newBuilder()
+                    .addHeader("Authorization","Bearer " + token)
+                    .build();
+            return chain.proceed(newRequest);
+        }
+    }).build();
+
+
     Retrofit.Builder buider = new Retrofit.Builder()
+            .client(client)
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
     Retrofit retrofit = buider.build();
@@ -58,9 +73,10 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Login> call, Response<Login> response) {
                 if(response.isSuccessful()){
                     token = response.body().getToken();
-                    Toast.makeText(MainActivity.this,response.body().getToken(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"El token es: "+response.body().getToken(),Toast.LENGTH_SHORT).show();
                     //=====si tuvimos exito y generamos un token manda a llama lo demas========
-                    getListaNoticias(token);
+                    //getListaNoticias(token);
+                    getTitles();
                 }
                 else{
                     Toast.makeText(MainActivity.this,"Fail :(",Toast.LENGTH_SHORT).show();
@@ -76,8 +92,10 @@ public class MainActivity extends AppCompatActivity {
     }//getToken
 
 
+
     //==============aca creo el metodo que llame en la interfaz(NewsService) para GET========================
-    private void getListaNoticias(String token){
+    /*private void getListaNoticias(String token){
+
         //le envio el token
         Call<ResponseBody> call = newsService.getListaNoticias("Bearer " + token);
         call.enqueue(new Callback<ResponseBody>() {
@@ -87,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         //me imprime el json en toast
                         Toast.makeText(MainActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
+                        getTitles();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -107,10 +126,41 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }//getListaNoticias
+    */
+
+
+    private void getTitles(){
+        Call<ResponseBody> call = newsService.getTitles("title");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(MainActivity.this,response.body().toString(),Toast.LENGTH_LONG).show();
+                titulo.setText(response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MainActivity.this,"Fallo perro!! :(",Toast.LENGTH_LONG).show();
+            }
+        });
+        /*
+       Call<News> call = newsService.getTitles("title");
+        call.enqueue(new Callback<News>() {
+            @Override
+            public void onResponse(Call<News> call, Response<News> response) {
+                Toast.makeText(MainActivity.this,response.body().toString(),Toast.LENGTH_LONG).show();
+                titulo.setText(response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<News> call, Throwable t) {
+                Toast.makeText(MainActivity.this,"Fallo perro!! :(",Toast.LENGTH_LONG).show();
+
+            }
+        });*/
+
+    }//getTitles
 
 
 
