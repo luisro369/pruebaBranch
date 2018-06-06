@@ -27,7 +27,7 @@ public interface NewsService {
 
 
     @GET("/news")
-    Call<ResponseBody> getListaNoticias(@Header("Authorization") String token);
+    Call<List<News>> getListaNoticias(@Header("Authorization") String token);
 
     /*
     @GET("News/{title}")

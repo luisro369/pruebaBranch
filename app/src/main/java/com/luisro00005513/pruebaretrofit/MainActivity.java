@@ -11,6 +11,7 @@ import com.luisro00005513.pruebaretrofit.network.NewsService;
 
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -79,23 +80,13 @@ public class MainActivity extends AppCompatActivity {
     //==============aca creo el metodo que llame en la interfaz(NewsService) para GET========================
     private void getListaNoticias(String token){
         //le envio el token
-        Call<ResponseBody> call = newsService.getListaNoticias("Bearer " + token);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<List<News>> call = newsService.getListaNoticias("Bearer " + token);
+        call.enqueue(new Callback<List<News>>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<List<News>> call, Response<List<News>> response) {
                 if(response.isSuccessful()){
-                    try {
-                        //me imprime el json en toast
-                        Toast.makeText(MainActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        //quiero que le textview me imprima lo de json pero no lo hace :(
-                        titulo.setText(response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    titulo.setText(response.body().get(0).getTitle());
+                    //adapter,array,, como hacer listado
                 }//if
                 else{
                     Toast.makeText(MainActivity.this,"Fail en getListaNoticias :(",Toast.LENGTH_SHORT).show();
@@ -103,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }//onResponse
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<List<News>> call, Throwable t) {
 
             }
         });
