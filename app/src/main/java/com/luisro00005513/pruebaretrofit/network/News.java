@@ -1,6 +1,10 @@
 package com.luisro00005513.pruebaretrofit.network;
 
 
+/**
+ * CLASE POJO DE NEWS ACA ES DONDE LOGRO METER TODO LO QUE ME LLEGA DEL API
+ */
+
 
 //===============java generado en www.jsonschema2pojo.org===============================
 import com.google.gson.annotations.Expose;
@@ -33,33 +37,14 @@ public class News {
     @Expose
     private String description;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public News(String title) {
-        this.title = title;
-    }
 
-    /**
-     *
-     * @param id
-     * @param v
-     * @param body
-     * @param title
-     * @param description
-     * @param game
-     * @param createdDate
-     * @param coverImage
-     */
-    public News(String id, String title, String body, String game, String createdDate, Integer v, String coverImage, String description) {
+    public News(String id, String title, String body, String game, String createdDate, String coverImage, String description) {
         super();
         this.id = id;
         this.title = title;
         this.body = body;
         this.game = game;
         this.createdDate = createdDate;
-        this.v = v;
         this.coverImage = coverImage;
         this.description = description;
     }

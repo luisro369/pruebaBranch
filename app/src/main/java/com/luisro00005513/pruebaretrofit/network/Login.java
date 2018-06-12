@@ -1,7 +1,9 @@
 package com.luisro00005513.pruebaretrofit.network;
 
 /**
- * Created by luisro on 6/5/18.
+ * ESTA CLASE LA OCUPO PARA PODER USAR EL TOKEN, LOS VALORES DE USER Y PASWORD SON SETEADOS EN EL MAIN
+ * SEGUN LA API EL USUARIO POR DEFALUT ES: username Y EL PASSWORD ES: password
+ * ENTIENDO QUE AL HACER ESTO ESTA CLASE ES UN POJO
  */
 
 public class Login {
