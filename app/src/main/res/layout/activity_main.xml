@@ -1,18 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.luisro00005513.pruebaretrofit.MainActivity">
+    tools:context="com.luisro00005513.pruebaretrofit.MainActivity"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="game:"
+        android:textColor="@color/red"
+        />
 
     <TextView
-        android:id="@+id/texto_news"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/game_xml"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="hola"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:textColor="@color/colorPrimaryDark"
         />
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="titulo:"
+        android:textColor="@color/red"
+        />
+
+    <TextView
+        android:id="@+id/title_xml"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hola"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="body(noticia completa):"
+        android:textColor="@color/red"
+        />
+
+    <TextView
+        android:id="@+id/body_xml"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hola"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
+
+
+
+
+</LinearLayout>

@@ -17,7 +17,7 @@ import retrofit2.http.Query;
 
 
 /**
- * Created by luisro on 6/3/18.
+ * INTERFAZ EN DONDE SE SETEAN LOS METODOS POST Y GET(ANALOGO A LO QUE SE HACE CON POSTMAN)
  */
 
 //===========Esta interface nos va a ayudar con retrofit======
@@ -28,19 +28,10 @@ public interface NewsService {
     Call<Login> getToken(@Body Login login);
 
 
-    @GET("/news/{title}")
-    public Call<ResponseBody> getTitles(@Query("title") String title);
-    //public Call<News> getTitles(@Query("title") String title);
-    //Call<ResponseBody> getListaNoticias(@Header("Authorization") String token);
-
-   // @GET("/news")
-    //public Call<News> getTitles(@Path("title") String title);
-
-    /*
-    @GET("News/{title}")
-    //Call<News> getTitle(@Path("title") String title);
-    Call<News> getTitle(@Header("Authorization") String credentials);
-    void getNew(Callback<List<News>> callback);
-    */
+    @GET("/news")
+    public Call<List<News>> getTitles(@Query("title") String title, @Query("game") String game,
+                                      @Query("_id") String id, @Query("body") String body,
+                                      @Query("created_date") String date, @Query("coverImage") String image,
+                                      @Query("description") String description);
 
 }

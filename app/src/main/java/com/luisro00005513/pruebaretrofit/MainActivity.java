@@ -11,6 +11,8 @@ import com.luisro00005513.pruebaretrofit.network.NewsService;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -26,12 +28,16 @@ import static android.os.SystemClock.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView titulo;
+    TextView titulo,game,body;
     //en esta varibale pongo la base de la url, en la interfaz NewsService pongo el resto "/news" por ejemplo
     public static final String BASE_URL = "https://gamenewsuca.herokuapp.com";
     //en esta variable "global" guardo el token que genere getToken()
     private static String token;
-    //====================retrofit===================
+    //hago un arreglo de objetos news para poder setear el pojo
+    ArrayList<News> news_list = new ArrayList<>();
+
+
+    //====================aca esta todo lo necesarios para la conexion inicial con retrofit===================
     OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
         @Override
         public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -51,19 +57,37 @@ public class MainActivity extends AppCompatActivity {
     NewsService newsService = retrofit.create(NewsService.class);
     //====================retrofit(fin)===================
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        titulo = (TextView)findViewById(R.id.title_xml);
+        game = (TextView)findViewById(R.id.game_xml);
+        body = (TextView)findViewById(R.id.body_xml);
+        //este metodo inicializa toda la recoleccion de datos de retrofit, seguir cadena de llamadas
+        //de metodos para entender, pero al final de que se complete el arreglo de News (news_list)
+        //ya estaria lleno y listo
         getToken();
-        titulo = (TextView)findViewById(R.id.texto_news);
+        //debido a que es un arreglo para recolectar los datos tengo que acceder a una casilla de dichos datos
+        //recordar que retrofit devuelve un monton de noticias del api
 
     }//on create
 
+    public void imprimirMierdas(){
+
+        titulo.setText(news_list.get(0).getTitle());
+        game.setText(news_list.get(0).getGame());
+        body.setText(news_list.get(0).getBody());
+
+    }
+
+
+
+
     //=============metodos retrofit==================
-
-
     //==============aca creo el metodo que llame en la interfaz(NewsService) para POST========================
     private void getToken(){
         Login login = new Login("username","password");
@@ -79,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
                     getTitles();
                 }
                 else{
-                    Toast.makeText(MainActivity.this,"Fail :(",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Fallo al agarrar token",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Fail de conexion perro :(",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,"Fallo de conexion",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -93,78 +117,38 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    //==============aca creo el metodo que llame en la interfaz(NewsService) para GET========================
-    /*private void getListaNoticias(String token){
-
-        //le envio el token
-        Call<ResponseBody> call = newsService.getListaNoticias("Bearer " + token);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
-                    try {
-                        //me imprime el json en toast
-                        Toast.makeText(MainActivity.this,response.body().string(),Toast.LENGTH_LONG).show();
-                        getTitles();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        //quiero que le textview me imprima lo de json pero no lo hace :(
-                        titulo.setText(response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }//if
-                else{
-                    Toast.makeText(MainActivity.this,"Fail en getListaNoticias :(",Toast.LENGTH_SHORT).show();
-                }//else
-            }//onResponse
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
-    }//getListaNoticias
-    */
 
 
     private void getTitles(){
-        Call<ResponseBody> call = newsService.getTitles("title");
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<List<News>> call = newsService.getTitles("title","game","_id","body", "date",
+                "coverImage", "description");
+        call.enqueue(new Callback<List<News>>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Toast.makeText(MainActivity.this,response.body().toString(),Toast.LENGTH_LONG).show();
-                titulo.setText(response.body().toString());
+            public void onResponse(Call<List<News>> call, Response<List<News>> response) {
+                Toast.makeText(MainActivity.this,"Conexion exitosa",Toast.LENGTH_SHORT).show();
+                    //Noticia completa
+                    String id = response.body().get(0).getId();
+                    String imagen = response.body().get(0).getCoverImage();
+                    String body = response.body().get(0).getBody();
+                    String date = response.body().get(0).getCreatedDate();
+                    String description = response.body().get(0).getDescription();
+                    //cardviews
+                    String titulo = response.body().get(0).getTitle();
+                    String game = response.body().get(0).getGame();
+                    //utilizo el contructor de la clase News para ir metiendo las mierdas
+                    news_list.add(new News(id,titulo,body,game,date,imagen,description));//arreglo para noticia
+
+                    imprimirMierdas();
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Fallo perro!! :(",Toast.LENGTH_LONG).show();
+            public void onFailure(Call<List<News>> call, Throwable t) {
+                Toast.makeText(MainActivity.this,"fallo de recoleccion de datos",Toast.LENGTH_SHORT).show();
+
             }
         });
-        /*
-       Call<News> call = newsService.getTitles("title");
-        call.enqueue(new Callback<News>() {
-            @Override
-            public void onResponse(Call<News> call, Response<News> response) {
-                Toast.makeText(MainActivity.this,response.body().toString(),Toast.LENGTH_LONG).show();
-                titulo.setText(response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<News> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Fallo perro!! :(",Toast.LENGTH_LONG).show();
-
-            }
-        });*/
 
     }//getTitles
-
-
-
-
 
 
 }//main class
