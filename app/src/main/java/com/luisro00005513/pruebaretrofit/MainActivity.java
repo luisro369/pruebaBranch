@@ -2,12 +2,14 @@ package com.luisro00005513.pruebaretrofit;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.luisro00005513.pruebaretrofit.network.Login;
 import com.luisro00005513.pruebaretrofit.network.News;
 import com.luisro00005513.pruebaretrofit.network.NewsService;
+import com.luisro00005513.pruebaretrofit.network.Players;
 
 
 import java.io.IOException;
@@ -28,13 +30,15 @@ import static android.os.SystemClock.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView titulo,game,body;
+    TextView titulo,game,body,name,bio;
     //en esta varibale pongo la base de la url, en la interfaz NewsService pongo el resto "/news" por ejemplo
     public static final String BASE_URL = "https://gamenewsuca.herokuapp.com";
     //en esta variable "global" guardo el token que genere getToken()
     private static String token;
-    //hago un arreglo de objetos news para poder setear el pojo
+    //hago un arreglo de objetos news para poder setear el json en el pojo
     ArrayList<News> news_list = new ArrayList<>();
+    //hago un arreglo de objetos players para poder setear el json en el pojo
+    ArrayList<Players> players_list = new ArrayList<>();
 
 
     //====================aca esta todo lo necesarios para la conexion inicial con retrofit===================
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         titulo = (TextView)findViewById(R.id.title_xml);
         game = (TextView)findViewById(R.id.game_xml);
         body = (TextView)findViewById(R.id.body_xml);
+        name = (TextView)findViewById(R.id.player_name_xml);
+        bio = (TextView)findViewById(R.id.biografia_player_xml);
         //este metodo inicializa toda la recoleccion de datos de retrofit, seguir cadena de llamadas
         //de metodos para entender, pero al final de que se complete el arreglo de News (news_list)
         //ya estaria lleno y listo
@@ -81,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         titulo.setText(news_list.get(0).getTitle());
         game.setText(news_list.get(0).getGame());
         body.setText(news_list.get(0).getBody());
+
+        name.setText(players_list.get(0).getName());
+        bio.setText(players_list.get(0).getBiografia());
 
     }
 
@@ -117,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+    //=======================metodo para poder extraer el json de noticia======================
+    //una vez extraido (response) lo meto a un arreglo de News(POJO)
     private void getTitles(){
         Call<List<News>> call = newsService.getTitles("title","game","_id","body", "date",
                 "coverImage", "description");
@@ -136,8 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     String game = response.body().get(0).getGame();
                     //utilizo el contructor de la clase News para ir metiendo las mierdas
                     news_list.add(new News(id,titulo,body,game,date,imagen,description));//arreglo para noticia
-
-                    imprimirMierdas();
+                    getPlayers();
             }
 
             @Override
@@ -149,6 +158,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }//getTitles
+
+
+    //=======================metodo para poder extraer el json de players======================
+    //una vez extraido (response) lo meto a un arreglo de Players(POJO)
+    private void getPlayers(){
+        Call<List<Players>> call = newsService.getPlayers("avatar","id","name",
+                "biografia","game");
+        call.enqueue(new Callback<List<Players>>() {
+            @Override
+            public void onResponse(Call<List<Players>> call, Response<List<Players>> response) {
+                Toast.makeText(MainActivity.this,"Exito extrayendo players",Toast.LENGTH_SHORT).show();
+                //Noticia completa
+                String avatar = response.body().get(3).getAvatar();
+                String id = response.body().get(3).getId();
+                String name = response.body().get(3).getName();
+                String biografia = response.body().get(3).getBiografia();
+                String game = response.body().get(3).getGame();
+                //llenando lista
+                Log.d("nombre",name);
+                players_list.add(new Players(avatar,id,name,biografia,game));//arreglo para players
+                imprimirMierdas();
+            }
+
+            @Override
+            public void onFailure(Call<List<Players>> call, Throwable t) {
+                Toast.makeText(MainActivity.this,"fallo extraccion de players",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }//get players
 
 
 }//main class
